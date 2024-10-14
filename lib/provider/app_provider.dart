@@ -11,41 +11,32 @@ class AppProvider extends ChangeNotifier {
   static AppProvider state(BuildContext context, [bool listen = false]) =>
       Provider.of<AppProvider>(context, listen: listen);
 
-  ThemeMode _themeMode = ThemeMode.light;
+  ThemeMode _themeMode = ThemeMode.dark; // Default to dark
   ThemeMode get themeMode => _themeMode;
 
   bool get isDark => _themeMode == ThemeMode.dark;
 
   void init() async {
     final prefs = await SharedPreferences.getInstance();
-
     String? stringTheme = prefs.getString('theme');
 
-    ThemeMode? theme =
-        stringTheme == null ? ThemeMode.light : themeMap[stringTheme];
-
-    if (theme == null) {
-      await prefs.setString(
-          'theme', ThemeMode.light.toString().split(".").last);
-
-      _themeMode = ThemeMode.light;
+    // If no saved theme, default to dark
+    if (stringTheme == null || !themeMap.containsKey(stringTheme)) {
+      _themeMode = ThemeMode.dark;
+      await prefs.setString('theme', 'dark');
+    } else {
+      _themeMode = themeMap[stringTheme]!;
     }
-    _themeMode = theme!;
 
     notifyListeners();
   }
 
   void setTheme(ThemeMode newTheme) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (_themeMode == newTheme) {
-      return;
-    }
-    _themeMode = newTheme;
+    if (_themeMode == newTheme) return;
 
-    await prefs.setString(
-      'theme',
-      newTheme.toString().split('.').last,
-    );
+    _themeMode = newTheme;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('theme', newTheme.toString().split('.').last);
     notifyListeners();
   }
 }

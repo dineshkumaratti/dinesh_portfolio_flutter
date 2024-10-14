@@ -18,7 +18,6 @@ dependencies:
   github: ^9.2.0
 
   # web related
-  flutter_html: any
   url_strategy: ^0.3.0
   universal_html: ^2.0.4
 

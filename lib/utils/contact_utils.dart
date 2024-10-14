@@ -12,7 +12,7 @@ class ContactUtils {
   ];
 
   static const List<String> details = [
-    "Vijayawada, Andhra Pradesh,India",
+    "Bengaluru,Karnataka,India",
     "dineshkumar.atti1@gmail.com",
   ];
 }
